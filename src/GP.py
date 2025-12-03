@@ -36,8 +36,6 @@ class GaussianProcess(eqx.Module):
         noise_std = jnp.exp(self.log_eps)[0]
         
         # Data fit term (Negative Log Likelihood part)
-        # Note: 1/noise * (y - Phi.T alpha)^2 is roughly the logic, 
-        # but using the Matrix Inversion Lemma form from your original code:
         y_norm2 = (y.conj().T @ y).real.squeeze()
         Fy = Phi.conj().T @ alpha
         quad = (Fy.conj().T @ Fy).real.squeeze()
