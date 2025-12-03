@@ -100,8 +100,6 @@ def main():
         
         if i % 100 == 0:
             noise_val = jnp.exp(model.log_eps)[0]
-            # Since X_train is static in model, we pass it explicitly here for clarity/safety
-            # though model.X is available
             mu_train = model.posterior_mean(X_train, y_train_flat)
             train_rmse = jnp.sqrt(jnp.mean((mu_train.real - y_train_flat.real)**2))
             print(f"[{i:04d}] NLML: {loss_val.item():.4e} | eps: {noise_val:.2e} | Train RMSE: {train_rmse:.4e}")

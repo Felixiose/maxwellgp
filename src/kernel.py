@@ -57,10 +57,7 @@ class PolarLightConeFeatureMap(eqx.Module):
         # k_exp: (R, 1, 3), pols: (R, 2, 3)
         cross_k_pi = jnp.cross(k_vec[:, None, :], pols, axis=-1)
         
-        # E = -w * (k_hat x pi) -> We used k_vec (w*k_hat) in cross, so divide by w? 
-        # Original code: E = -w * cross(k_hat, pi). 
-        # My calc above: cross(k_vec, pi) = w * cross(k_hat, pi).
-        # So E = - cross_k_pi.
+       
         E = - cross_k_pi 
         B = jnp.cross(kdirs[:, None, :], cross_k_pi, axis=-1)
         
@@ -72,7 +69,6 @@ class PolarLightConeFeatureMap(eqx.Module):
         
         # Broadcast multiply: (R, 2, 6) * (N, R).T -> (R, 2, 6) * (R, N) 
         # We need output (F, 6N) where F = R*2
-        # Let's do einsum for clarity: r=spectral, p=pol, c=6 components, n=points
         feat = jnp.einsum('rpc,nr->rpnc', coeff6, phases)
         
         # Flatten r*p -> F, flatten n*c -> 6N
